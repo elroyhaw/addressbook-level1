@@ -72,7 +72,6 @@ public class AddressBook {
     private static final String MESSAGE_INVALID_PROGRAM_ARGS = "Too many parameters! Correct program argument format:"
             + LS + "\tjava AddressBook"
             + LS + "\tjava AddressBook [custom storage file path]";
-    private static final String MESSAGE_INVALID_PERSON_DISPLAYED_INDEX = "The person index provided is invalid";
     private static final String MESSAGE_INVALID_STORAGE_FILE_CONTENT = "Storage file has invalid content";
     private static final String MESSAGE_PERSON_NOT_IN_ADDRESSBOOK = "Person could not be found in address book";
     private static final String MESSAGE_ERROR_CREATING_STORAGE_FILE = "Error: unable to create file: %1$s";
@@ -109,10 +108,9 @@ public class AddressBook {
     private static final String COMMAND_LIST_EXAMPLE = COMMAND_LIST_WORD;
 
     private static final String COMMAND_DELETE_WORD = "delete";
-    private static final String COMMAND_DELETE_DESC = "Deletes a person identified by the index number used in "
-            + "the last find/list call.";
-    private static final String COMMAND_DELETE_PARAMETER = "INDEX";
-    private static final String COMMAND_DELETE_EXAMPLE = COMMAND_DELETE_WORD + " 1";
+    private static final String COMMAND_DELETE_DESC = "Deletes a person identified by the name.";
+    private static final String COMMAND_DELETE_PARAMETER = "NAME";
+    private static final String COMMAND_DELETE_EXAMPLE = COMMAND_DELETE_WORD + " alice";
 
     private static final String COMMAND_CLEAR_WORD = "clear";
     private static final String COMMAND_CLEAR_DESC = "Clears address book permanently.";
@@ -136,11 +134,6 @@ public class AddressBook {
     private enum PersonProperty {
         NAME, EMAIL, PHONE
     }
-
-    /**
-     * The number of data elements for a single person.
-     */
-    private static final int PERSON_DATA_COUNT = 3;
 
     /**
      * Offset required to convert between 1-indexing and 0-indexing.COMMAND_
@@ -492,51 +485,23 @@ public class AddressBook {
      * @return feedback display message for the operation result
      */
     private static String executeDeletePerson(String commandArgs) {
-        if (!isDeletePersonArgsValid(commandArgs)) {
+        if (commandArgs.isEmpty()) {
             return getMessageForInvalidCommandInput(COMMAND_DELETE_WORD, getUsageInfoForDeleteCommand());
         }
-        final int targetVisibleIndex = extractTargetIndexFromDeletePersonArgs(commandArgs);
-        if (!isDisplayIndexValidForLastPersonListingView(targetVisibleIndex)) {
-            return MESSAGE_INVALID_PERSON_DISPLAYED_INDEX;
+        final Set<String> keywords = extractKeywordsFromFindPersonArgs(commandArgs);
+        HashMap<PersonProperty, String> personToDelete = new HashMap<>();
+        for (HashMap<PersonProperty, String> person : getAllPersonsInAddressBook()) {
+            final Set<String> wordsInName = new HashSet<>(splitByWhitespace(getNameFromPerson(person)));
+            if (wordsInName.equals(keywords)) {
+                personToDelete = person;
+                break;
+            }
         }
-        final HashMap<PersonProperty, String> targetInModel = getPersonByLastVisibleIndex(targetVisibleIndex);
-        return deletePersonFromAddressBook(targetInModel) ? getMessageForSuccessfulDelete(targetInModel) // success
-                : MESSAGE_PERSON_NOT_IN_ADDRESSBOOK; // not found
-    }
-
-    /**
-     * Checks validity of delete person argument string's format.
-     *
-     * @param rawArgs raw command args string for the delete person command
-     * @return whether the input args string is valid
-     */
-    private static boolean isDeletePersonArgsValid(String rawArgs) {
-        try {
-            final int extractedIndex = Integer.parseInt(rawArgs.trim()); // use standard libraries to parse
-            return extractedIndex >= DISPLAYED_INDEX_OFFSET;
-        } catch (NumberFormatException nfe) {
-            return false;
+        if (!personToDelete.isEmpty()) {
+            return deletePersonFromAddressBook(personToDelete) ? getMessageForSuccessfulDelete(personToDelete) // success
+                    : MESSAGE_PERSON_NOT_IN_ADDRESSBOOK; // not found
         }
-    }
-
-    /**
-     * Extracts the target's index from the raw delete person args string
-     *
-     * @param rawArgs raw command args string for the delete person command
-     * @return extracted index
-     */
-    private static int extractTargetIndexFromDeletePersonArgs(String rawArgs) {
-        return Integer.parseInt(rawArgs.trim());
-    }
-
-    /**
-     * Checks that the given index is within bounds and valid for the last shown person list view.
-     *
-     * @param index to check
-     * @return whether it is valid
-     */
-    private static boolean isDisplayIndexValidForLastPersonListingView(int index) {
-        return index >= DISPLAYED_INDEX_OFFSET && index < latestPersonListingView.size() + DISPLAYED_INDEX_OFFSET;
+        return MESSAGE_PERSON_NOT_IN_ADDRESSBOOK;
     }
 
     /**
@@ -671,16 +636,6 @@ public class AddressBook {
     private static void updateLatestViewedPersonListing(ArrayList<HashMap<PersonProperty, String>> newListing) {
         // clone to insulate from future changes to arg list
         latestPersonListingView = new ArrayList<>(newListing);
-    }
-
-    /**
-     * Retrieves the person identified by the displayed index from the last shown listing of persons.
-     *
-     * @param lastVisibleIndex displayed index from last shown person listing
-     * @return the actual person object in the last shown person listing
-     */
-    private static HashMap<PersonProperty, String> getPersonByLastVisibleIndex(int lastVisibleIndex) {
-        return latestPersonListingView.get(lastVisibleIndex - DISPLAYED_INDEX_OFFSET);
     }
 
 
