@@ -83,23 +83,22 @@ Returns any person having names `Betsy`, `Tim`, or `John`
 
 === Deleting a person: `delete`
 
-Deletes the specified version from the address book. +
-Format: `delete INDEX`
+Deletes the specified person from the address book. +
+Format: `delete NAME`
 
 [NOTE]
 ====
-The index refers to the index numbers shown in the most recent listing.
+The name refers to the targeted name of person to be deleted.
 ====
 
 Examples:
 
 * `list` +
-`delete 2` +
-Deletes the 2nd person in the address book.
+`delete Alice` +
+Deletes the first person with name Alice in the address book.
 
-* `find Betsy` +
-`delete 1` +
-Deletes the 1st person in the results of the `find` command.
+* `delete Charlie Dickson`
+Deletes Charlie Dickson but not Charlie, Dickson or charlie dickson.
 
 === Clearing all entries: `clear`
 
