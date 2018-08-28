@@ -62,9 +62,9 @@
 || list: Displays all persons as a list with index numbers.
 || 	Example: list
 || 
-|| delete: Deletes a person identified by the index number used in the last find/list call.
-|| 	Parameters: INDEX
-|| 	Example: delete 1
+|| delete: Deletes a person identified by the name.
+|| 	Parameters: NAME
+|| 	Example: delete alice
 || 
 || clear: Clears address book permanently.
 || 	Example: clear
@@ -206,40 +206,25 @@
 || ===================================================
 || Enter command: || [Command entered:  delete]
 || Invalid command format: delete 
-|| delete: Deletes a person identified by the index number used in the last find/list call.
-|| 	Parameters: INDEX
-|| 	Example: delete 1
+|| delete: Deletes a person identified by the name.
+|| 	Parameters: NAME
+|| 	Example: delete alice
 || 
 || ===================================================
 || Enter command: || [Command entered:  delete should be only one number]
-|| Invalid command format: delete 
-|| delete: Deletes a person identified by the index number used in the last find/list call.
-|| 	Parameters: INDEX
-|| 	Example: delete 1
-|| 
+|| Person could not be found in address book
 || ===================================================
 || Enter command: || [Command entered:  delete -1]
-|| Invalid command format: delete 
-|| delete: Deletes a person identified by the index number used in the last find/list call.
-|| 	Parameters: INDEX
-|| 	Example: delete 1
-|| 
+|| Person could not be found in address book
 || ===================================================
 || Enter command: || [Command entered:  delete 0]
-|| Invalid command format: delete 
-|| delete: Deletes a person identified by the index number used in the last find/list call.
-|| 	Parameters: INDEX
-|| 	Example: delete 1
-|| 
-|| ===================================================
-|| Enter command: || [Command entered:  delete 3]
-|| The person index provided is invalid
-|| ===================================================
-|| Enter command: || [Command entered:  delete 2]
-|| Deleted Person: Charlie Dickson  Phone Number: 333333  Email: charlie.d@nus.edu.sg
-|| ===================================================
-|| Enter command: || [Command entered:  delete 2]
 || Person could not be found in address book
+|| ===================================================
+|| Enter command: || [Command entered:  delete Charlie]
+|| Person could not be found in address book
+|| ===================================================
+|| Enter command: || [Command entered:  delete Charlie Dickson]
+|| Deleted Person: Charlie Dickson  Phone Number: 333333  Email: charlie.d@nus.edu.sg
 || ===================================================
 || Enter command: || [Command entered:  list]
 || 	1. Adam Brown  Phone Number: 111111  Email: adam@gmail.com
@@ -249,7 +234,7 @@
 || 
 || 4 persons found!
 || ===================================================
-|| Enter command: || [Command entered:  delete 4]
+|| Enter command: || [Command entered:  delete Esther Potato]
 || Deleted Person: Esther Potato  Phone Number: 555555  Email: esther@notreal.potato
 || ===================================================
 || Enter command: || [Command entered:  list]
@@ -258,15 +243,6 @@
 || 	3. Dickson Ee  Phone Number: 444444  Email: dickson@nus.edu.sg
 || 
 || 3 persons found!
-|| ===================================================
-|| Enter command: || [Command entered:  delete 1]
-|| Deleted Person: Adam Brown  Phone Number: 111111  Email: adam@gmail.com
-|| ===================================================
-|| Enter command: || [Command entered:  list]
-|| 	1. Betsy Choo  Phone Number: 222222  Email: benchoo@nus.edu.sg
-|| 	2. Dickson Ee  Phone Number: 444444  Email: dickson@nus.edu.sg
-|| 
-|| 2 persons found!
 || ===================================================
 || Enter command: || [Command entered:  clear]
 || Address book has been cleared!
