@@ -501,8 +501,8 @@ public class AddressBook {
             }
         }
         if (!personToDelete.isEmpty()) {
-            return canDeletePersonFromAddressBook(personToDelete) ?
-                    getMessageForSuccessfulDelete(personToDelete) // success
+            return canDeletePersonFromAddressBook(personToDelete)
+                    ? getMessageForSuccessfulDelete(personToDelete) // success
                     : MESSAGE_PERSON_NOT_IN_ADDRESSBOOK; // not found
         }
         return MESSAGE_PERSON_NOT_IN_ADDRESSBOOK;
